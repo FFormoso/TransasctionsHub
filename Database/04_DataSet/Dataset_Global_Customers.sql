@@ -1,0 +1,35 @@
+SET IDENTITY_INSERT dbo.Global_Customers ON;
+
+insert into dbo.Global_Customers (CustomerID, CustomerEmail, CustomerFirstName, CustomerLastName, ShippingAddressID, BillingAddressID, MonthlyFee, CreationDate)
+values  (16474, N'Susan.Young@example.com', N'Susan', N'Young', 26474, 26474, 99.9900, N'2025-06-24 00:38:30.177'),
+        (16475, N'Betty.Thompson@example.com', N'Betty', N'Thompson', 26475, 26475, 10.0000, N'2025-06-24 00:38:30.183'),
+        (16476, N'David.Wilson@example.com', N'David', N'Wilson', 26476, 26476, 10.0000, N'2025-06-24 00:38:30.190'),
+        (16477, N'Steven.Young@example.com', N'Steven', N'Young', 26477, 26477, 10.0000, N'2025-06-24 00:38:30.197'),
+        (16478, N'Cynthia.Young@example.com', N'Cynthia', N'Young', 26478, 26478, 25.0000, N'2025-06-24 00:38:30.200'),
+        (16479, N'Steven.Anderson@example.com', N'Steven', N'Anderson', 26479, 26479, 25.0000, N'2025-06-24 00:38:30.207'),
+        (16480, N'James.Williams@example.com', N'James', N'Williams', 26480, 26480, 25.0000, N'2025-06-24 00:38:30.210'),
+        (16481, N'Thomas.Thomas@example.com', N'Thomas', N'Thomas', 26481, 26481, 25.0000, N'2025-06-24 00:38:30.213'),
+        (16482, N'Daniel.Martin@example.com', N'Daniel', N'Martin', 26482, 26482, 25.0000, N'2025-06-24 00:38:30.220'),
+        (16483, N'Mark.Adams@example.com', N'Mark', N'Adams', 26483, 26483, 99.9900, N'2025-06-24 00:38:30.223'),
+        (16484, N'Karen.Jones@example.com', N'Karen', N'Jones', 26484, 26484, 99.9900, N'2025-06-24 00:38:30.230'),
+        (16485, N'Betty.Williams@example.com', N'Betty', N'Williams', 26485, 26485, 10.0000, N'2025-06-24 00:38:30.233'),
+        (16486, N'Sarah.Moore@example.com', N'Sarah', N'Moore', 26486, 26486, 99.9900, N'2025-06-24 00:38:30.240'),
+        (16487, N'Mary.Smith@example.com', N'Mary', N'Smith', 26487, 26487, 25.0000, N'2025-06-24 00:38:30.243'),
+        (16488, N'Mary.Harris@example.com', N'Mary', N'Harris', 26488, 26488, 25.0000, N'2025-06-24 00:38:30.250'),
+        (16489, N'Donna.Moore@example.com', N'Donna', N'Moore', 26489, 26489, 10.0000, N'2025-06-24 00:38:30.253'),
+        (16490, N'David.Martinez@example.com', N'David', N'Martinez', 26490, 26490, 99.9900, N'2025-06-24 00:38:30.260'),
+        (16491, N'Sarah.Scott@example.com', N'Sarah', N'Scott', 26491, 26491, 99.9900, N'2025-06-24 00:38:30.263'),
+        (16492, N'Sarah.White@example.com', N'Sarah', N'White', 26492, 26492, 25.0000, N'2025-06-24 00:38:30.270'),
+        (16493, N'Susan.Moore@example.com', N'Susan', N'Moore', 26493, 26493, 10.0000, N'2025-06-24 00:38:30.273'),
+        (16494, N'Donna.Jones@example.com', N'Donna', N'Jones', 26494, 26494, 25.0000, N'2025-06-24 00:38:30.280'),
+        (16495, N'David.King@example.com', N'David', N'King', 26495, 26495, 25.0000, N'2025-06-24 00:38:30.283'),
+        (16496, N'David.Hall@example.com', N'David', N'Hall', 26496, 26496, 25.0000, N'2025-06-24 00:38:30.290'),
+        (16497, N'Susan.Roberts@example.com', N'Susan', N'Roberts', 26497, 26497, 99.9900, N'2025-06-24 00:38:30.293'),
+        (16498, N'Donna.Jones@example.com', N'Donna', N'Jones', 26498, 26498, 99.9900, N'2025-06-24 00:38:30.300'),
+        (16499, N'Matthew.Wright@example.com', N'Matthew', N'Wright', 26499, 26499, 99.9900, N'2025-06-24 00:38:30.303'),
+        (16500, N'Jessica.Wright@example.com', N'Jessica', N'Wright', 26500, 26500, 10.0000, N'2025-06-24 00:38:30.310'),
+        (16501, N'Joseph.Scott@example.com', N'Joseph', N'Scott', 26501, 26501, 25.0000, N'2025-06-24 00:38:30.317'),
+        (16502, N'Thomas.Wilson@example.com', N'Thomas', N'Wilson', 26502, 26502, 10.0000, N'2025-06-24 00:38:30.320'),
+        (16503, N'James.Roberts@example.com', N'James', N'Roberts', 26503, 26503, 25.0000, N'2025-06-24 00:38:30.327');
+
+SET IDENTITY_INSERT dbo.Global_Customers OFF;
