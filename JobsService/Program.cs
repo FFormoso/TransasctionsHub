@@ -23,7 +23,8 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         var env =  Environment.GetEnvironmentVariables()["DOTNET_ENVIRONMENT"];
         configBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        .AddJsonFile($"appsettings.{env}.json", true, true);
+            .AddJsonFile($"appsettings.{env}.json", true, true)
+            .AddUserSecrets<Program>();
     })
     .Build();
  

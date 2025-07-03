@@ -1,0 +1,2 @@
+﻿insert into dbo.Global_Jobs (Name, IsRunning, Assembly, TypeName, MachineNameList)
+values  (N'RecurringChargeJob', 1, N'_011Global.JobsService', N'_011Global.JobsService.JobImplementations.RecurringChargeJob', N'DESKTOP-A939IS8');

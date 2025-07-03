@@ -1,0 +1,1 @@
+﻿:r ./Data_Global_Jobs.sql
