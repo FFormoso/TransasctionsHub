@@ -1,0 +1,36 @@
+services:
+  transactionshub3-mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: transactionshub3-mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PASS}
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "SA", "-P", "${DB_PASS}", "-Q", "SELECT 1"]
+      interval: 5s
+      retries: 10
+    profiles: ["TransactionsHub"]
+
+  aux-db-init:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    restart: no
+    depends_on:
+      transactionshub3-mssql:
+        condition: service_healthy
+    volumes:
+      - ../../Database/01_Schema:/scripts/Schema
+      - ../../Database/02_Data:/scripts/Data
+      - ../../Database/04_Dataset:/scripts/Dataset
+    entrypoint: /bin/bash -c "
+      cd /scripts/Schema/;
+      /opt/mssql-tools/bin/sqlcmd -S transactionshub3-mssql -U SA -P '${DB_PASS}' -i 'Database.sql';
+      /opt/mssql-tools/bin/sqlcmd -S transactionshub3-mssql -U SA -P '${DB_PASS}' -d 'TransactionsHub3' -i 'Schema.sql';
+      
+      cd /scripts/Data/;
+      /opt/mssql-tools/bin/sqlcmd -S transactionshub3-mssql -U SA -P '${DB_PASS}' -d 'TransactionsHub3' -i 'Data.sql';
+      
+      cd /scripts/Dataset/;
+      /opt/mssql-tools/bin/sqlcmd -S transactionshub3-mssql -U SA -P '${DB_PASS}' -d 'TransactionsHub3' -i 'Dataset.sql';"
+    profiles: ["TransactionsHub"]

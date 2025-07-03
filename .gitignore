@@ -44,6 +44,9 @@ Generated\ Files/
 # JetBrains Rider
 .idea/
 
+# Environment file
+.env
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
