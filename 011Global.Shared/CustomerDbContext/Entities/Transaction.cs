@@ -31,6 +31,7 @@ public class Transaction
     [MaxLength(300)]
     public string? SubErrorDesc3 { get; set; }
     
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime CreationDate { get; set; }
     
     public int? CreditCardID { get; set; }
@@ -38,9 +39,6 @@ public class Transaction
     //Navigation properties
     [ForeignKey("CustomerID")]
     public Customer Customer { get; set; } = null!;
-    
-    // [ForeignKey("TransactionStatusID")]
-    // public TransactionStatus TransactionStatus { get; set; } = null!;
     
     [ForeignKey("CreditCardID")]
     public CreditCard? CreditCard { get; set; }

@@ -5,4 +5,8 @@ namespace _011Global.Shared.CustomerDbContext.Interfaces;
 public interface ICustomerRepository
 {
     public IQueryable<Customer> Get();
+
+    public IQueryable<Customer> GetCustomersInDue();
+
+    public Task<Transaction> SaveTransaction(Transaction transaction);
 }

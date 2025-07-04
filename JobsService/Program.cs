@@ -1,16 +1,19 @@
 using _011Global.JobsService.JobInterfaces;
 using _011Global.JobsService;
-using _011Global.JobsService.Services;
+using _011Global.JobsService.Settings;
 using _011Global.Shared;
 
 
+using _011Global.Shared.Settings;
 
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((host, services) =>
     {
 
-        services.AddSingleton<CancellationTokenSource>(_ => (new CancellationTokenSource()))
+        services.AddSingleton<AppSettingsManagerBase, AppSettingsManager>()
+        .AddSingleton<AppSettingsManager>()
+        .AddSingleton<CancellationTokenSource>(_ => (new CancellationTokenSource()))
         .AddTransient<CancellationTokenBase, WorkerCancellationToken>()
         .RegisterDBContexts(host.Configuration.GetConnectionString("TransactionsHubDB"))
         .LoadInterfacesSingleton<IJob>()
