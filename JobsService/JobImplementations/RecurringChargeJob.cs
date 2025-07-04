@@ -1,21 +1,102 @@
 ﻿using _011Global.JobsService.JobInterfaces;
+using _011Global.JobsService.Settings;
 using _011Global.Shared;
+using _011Global.Shared.CustomerDbContext.Entities;
+using _011Global.Shared.CustomerDbContext.Enums;
+using _011Global.Shared.CustomerDbContext.Interfaces;
+using _011Global.Shared.PaymentGateways.Builders;
+using _011Global.Shared.PaymentGateways.Interfaces;
+using _011Global.Shared.PaymentGateways.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace _011Global.JobsService.JobImplementations;
 
 public class RecurringChargeJob : Job, IJob
 {
-    protected override int IterationWaitTime { get { return 5000; } } //TODO: from config
-    public RecurringChargeJob(CancellationTokenBase cancellationTokenBase, ILogger<RecurringChargeJob> logger, IServiceProvider serviceProvider) : base(cancellationTokenBase, logger, serviceProvider)
-    {
-    }
+    private readonly IServiceProvider _serviceProvider;
 
-    
+    private readonly AppSettingsManager _appSettings;
+    protected override int IterationWaitTime => _appSettings.RecurringChargeJobIterationTime;
+
+    public RecurringChargeJob(
+        CancellationTokenBase cancellationTokenBase, ILogger<RecurringChargeJob> logger,
+        IServiceProvider serviceProvider, AppSettingsManager appSettings)
+        : base(cancellationTokenBase, logger, serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+        _appSettings = appSettings;
+    }
 
     protected override async Task WorkLoad(CancellationToken cancellationToken)
-    { 
-        //TODO: sample the customers’ data and submit corresponding transactions
+    {
+        using var scope = _serviceProvider.CreateAsyncScope();
+        var customerRepo = scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+        var paymentGateway = scope.ServiceProvider.GetRequiredService<IPaymentGateway>();
+
+        var customers = await customerRepo.GetCustomersInDue().ToListAsync(cancellationToken);
         
+        foreach (var customer in customers.Skip(3))
+        {
+            try
+            {
+                foreach (var creditCard in customer.CreditCards)
+                {
+                    logger.LogInformation("Processing payment for customer {customerId} with Credit Card {creditCardId}"
+                        , customer.CustomerID, creditCard.CreditCardID);
+                    
+                    var requestBuilder = PaymentRequestBuilder
+                        .CreateRecurringPaymentRequest(customer)
+                        .WithCustomerBasicInfo()
+                        .WithCreditCard(creditCard)
+                        .WithBillingAddress()
+                        .WithShippingAddress()
+                        .WithSystemInfo(assemblyName: Name);
+
+                    if (!creditCard.Tokenized)
+                        requestBuilder.WithCardTokenization();
+
+                    var request = requestBuilder.Build();
+
+                    PaymentResponse paymentRes = await paymentGateway.ProcessPaymentAsync(request);
+
+                    if (request.CardTokenization && paymentRes.CreditCard != null)
+                    {
+                        creditCard.CreditCardNumber = paymentRes.CreditCard.CreditCardNumber;
+                        creditCard.Tokenized = true;
+                    }
+
+                    await customerRepo.SaveTransaction(new Transaction()
+                    {
+                        Amount = paymentRes.Amount,
+                        CreditCard = creditCard,
+                        CustomerID = customer.CustomerID,
+                        ResponseCode = paymentRes.ResponseCode,
+                        PaymentGWTransID = paymentRes.TransactionId,
+                        TransactionStatusID = paymentRes.TransactionStatus,
+                        SubErrorDesc1 = paymentRes.ErrorMessage
+                    });
+
+                    if (paymentRes.TransactionStatus != TransactionStatus.Approved)
+                    {
+                        // Notify of the failure in some way
+                        logger.LogInformation(
+                            "Payment for customer {customerId} with Credit Card {creditCardId} was not approved. Response code: {responseCode}", 
+                            customer.CustomerID, creditCard.CreditCardID, paymentRes.ResponseCode);
+                    }
+                    else
+                    {
+                        logger.LogInformation("Payment for customer {customerId} was approved.", customer.CustomerID);
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogCritical($"Error processing payment for customer {customer.CustomerID}", ex);
+            }
+        }
+
+
         logger.LogInformation($"{Name} my last run time was: {DateTime.Now}");
     }
-} 
+}

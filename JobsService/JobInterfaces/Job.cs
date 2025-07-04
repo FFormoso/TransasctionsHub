@@ -4,29 +4,30 @@ using _011Global.Shared.JobsServiceDBContext.Interfaces;
 
 namespace _011Global.JobsService.JobInterfaces;
 public abstract class Job
+{
+    protected abstract int IterationWaitTime { get; }
+    private CancellationToken _globalCancellationToken { get; set;  }
+    protected CancellationToken cancellationToken;
+    protected CancellationTokenSource cts { get; set; }
+
+    protected ILogger logger { get; private set;  }
+
+    private readonly IServiceProvider _serviceProvider;
+
+    public string Name { get; private set; }
+
+    private Task RunningTask { get; set; }
+    
+    public Job(CancellationTokenBase globalCancellationToken, ILogger logger, IServiceProvider serviceProvider)
     {
-        protected abstract int IterationWaitTime { get; }
-        private CancellationToken _globalCancellationToken { get; set;  }
-        protected CancellationToken cancellationToken;
-        protected CancellationTokenSource cts { get; set; }
+    this.
+        _globalCancellationToken = globalCancellationToken;
+        this.logger = logger;
+        Name = this.GetType().FullName;
+        _serviceProvider = serviceProvider;
+    }
 
-        protected ILogger logger { get; private set;  }
-
-        private IServiceProvider _serviceProvider;
-
-        public string Name { get; private set; }
-
-        private Task RunningTask { get; set; }
-        public Job(CancellationTokenBase globalCancellationToken, ILogger logger, IServiceProvider serviceProvider)
-        {
-        this.
-            _globalCancellationToken = globalCancellationToken;
-            this.logger = logger;
-            Name = this.GetType().FullName;
-            _serviceProvider = serviceProvider;
-        }
-
-        protected abstract Task WorkLoad(CancellationToken cancellationToken);
+    protected abstract Task WorkLoad(CancellationToken cancellationToken);
 
     public async Task Start()
     {
@@ -71,29 +72,29 @@ public abstract class Job
         }
     }
 
-        public virtual async Task Stop()
+    public virtual async Task Stop()
+    {
+        try
         {
-            try
+            using (var scope = _serviceProvider.CreateAsyncScope())
             {
-                using (var scope = _serviceProvider.CreateAsyncScope())
-                {
-                    var jobRepo = scope.ServiceProvider.GetRequiredService<IJobsServiceRepository>();
+                var jobRepo = scope.ServiceProvider.GetRequiredService<IJobsServiceRepository>();
 
-                    await jobRepo.UpdateStopedJob(Name, isRunning: true, lastStopDate: DateTime.Now);
-                }
-                
-                if (RunningTask != null && !RunningTask.IsCompleted)
-                {
-                    cts.Cancel();
-                    await RunningTask;
-                    logger.LogInformation($"{Name} stopped {DateTime.Now}");
-                }
+                await jobRepo.UpdateStopedJob(Name, isRunning: true, lastStopDate: DateTime.Now);
             }
-            catch (Exception ex)
+            
+            if (RunningTask != null && !RunningTask.IsCompleted)
             {
-                logger.LogError($"Error stoping job {Name}. Exception: {ex.Message}");
+                cts.Cancel();
+                await RunningTask;
+                logger.LogInformation($"{Name} stopped {DateTime.Now}");
             }
         }
+        catch (Exception ex)
+        {
+            logger.LogError($"Error stoping job {Name}. Exception: {ex.Message}");
+        }
+    }
 
 }
 

@@ -2,8 +2,8 @@ using _011Global.JobsService.JobInterfaces;
 using _011Global.JobsService;
 using _011Global.JobsService.Settings;
 using _011Global.Shared;
-
-
+using _011Global.Shared.PaymentGateways.Interfaces;
+using _011Global.Shared.PaymentGateways.USAePay;
 using _011Global.Shared.Settings;
 
 
@@ -16,7 +16,10 @@ IHost host = Host.CreateDefaultBuilder(args)
         .AddSingleton<CancellationTokenSource>(_ => (new CancellationTokenSource()))
         .AddTransient<CancellationTokenBase, WorkerCancellationToken>()
         .RegisterDBContexts(host.Configuration.GetConnectionString("TransactionsHubDB"))
+        .AddScoped<IPaymentGateway, USAePayPaymentGatewayAdapter>()
+        .AddScoped<USAePayService>()
         .LoadInterfacesSingleton<IJob>()
+        .AddHttpClient()
         .AddHostedService<Worker>();
 
 
