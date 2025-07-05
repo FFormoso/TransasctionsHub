@@ -27,7 +27,7 @@ public abstract class Job
         _serviceProvider = serviceProvider;
     }
 
-    protected abstract Task WorkLoad(CancellationToken cancellationToken);
+    protected abstract Task WorkLoad();
 
     public async Task Start()
     {
@@ -52,7 +52,7 @@ public abstract class Job
                 {
                     try
                     {
-                        await WorkLoad(cancellationToken);
+                        await WorkLoad();
                         await Task.Delay(IterationWaitTime, cancellationToken);
                     }
                     catch (TaskCanceledException ex)

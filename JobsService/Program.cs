@@ -38,8 +38,11 @@ builder.Services.AddTransient<CancellationTokenBase, WorkerCancellationToken>();
 builder.Services.RegisterDbContexts(builder.Configuration.GetConnectionString("TransactionsHubDB"));
 
 // Add PaymentGateways
-builder.Services.AddScoped<IPaymentGateway, USAePayPaymentGatewayAdapter>();
+builder.Services.AddKeyedScoped<IPaymentGateway, USAePayPaymentGatewayAdapter>("USAePay");
 builder.Services.AddScoped<USAePayService>();
+
+// builder.Services.AddKeyedScoped<IPaymentGateway, PayPalPaymentGatewayAdapter>("PayPal");
+// builder.Services.AddScoped<PayPalService>();
 
 // Add HttpClient
 builder.Services.AddHttpClient();

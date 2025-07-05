@@ -27,11 +27,11 @@ public class RecurringChargeJob : Job, IJob
         _appSettings = appSettings;
     }
 
-    protected override async Task WorkLoad(CancellationToken cancellationToken)
+    protected override async Task WorkLoad()
     {
         using var scope = _serviceProvider.CreateAsyncScope();
         var customerRepo = scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
-        var paymentGateway = scope.ServiceProvider.GetRequiredService<IPaymentGateway>();
+        var paymentGateway = scope.ServiceProvider.GetRequiredKeyedService<IPaymentGateway>(_appSettings.RecurringChargeJobPaymentGateway);
 
         var customers = await customerRepo.GetCustomersInDue().ToListAsync(cancellationToken);
         
