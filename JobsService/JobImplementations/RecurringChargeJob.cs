@@ -35,7 +35,7 @@ public class RecurringChargeJob : Job, IJob
 
         var customers = await customerRepo.GetCustomersInDue().ToListAsync(cancellationToken);
         
-        foreach (var customer in customers.Skip(3))
+        foreach (var customer in customers)
         {
             try
             {

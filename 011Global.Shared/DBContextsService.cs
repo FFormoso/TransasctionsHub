@@ -11,19 +11,21 @@ namespace _011Global.Shared
 {
     public static class DBContextsService
     {
-        public static IServiceCollection RegisterDBContexts(this IServiceCollection _services, string? connectionString)
+        public static IServiceCollection RegisterDbContexts(this IServiceCollection services, string? connectionString)
         {
-            _services.AddDbContext<JobsServiceContext>(options => options.UseSqlServer(connectionString,
+            // JobsServiceContext
+            services.AddDbContext<JobsServiceContext>(options => options.UseSqlServer(connectionString,
             sqlServerOptions => sqlServerOptions.CommandTimeout(120).EnableRetryOnFailure()));
 
-            _services.AddTransient<IJobsServiceRepository, JobsServiceRepository>();
+            services.AddTransient<IJobsServiceRepository, JobsServiceRepository>();
             
-            _services.AddDbContext<CustomerContext>(options => options.UseSqlServer(connectionString,
+            // CustomerContext
+            services.AddDbContext<CustomerContext>(options => options.UseSqlServer(connectionString,
                 sqlServerOptions => sqlServerOptions.CommandTimeout(120).EnableRetryOnFailure()));
             
-            _services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
 
-            return _services;
+            return services;
         }
     }
 }

@@ -5,34 +5,52 @@ using _011Global.Shared;
 using _011Global.Shared.PaymentGateways.Interfaces;
 using _011Global.Shared.PaymentGateways.USAePay;
 using _011Global.Shared.Settings;
+using Serilog;
 
+var builder = new HostApplicationBuilder(args);
+    
+// Configure AppSettings
+builder.Configuration
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddUserSecrets<Program>();
 
-IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices((host, services) =>
-    {
+// Add AppSettingsManager
+builder.Services.AddSingleton<AppSettingsManagerBase, AppSettingsManager>();
+builder.Services.AddSingleton<AppSettingsManager>();
 
-        services.AddSingleton<AppSettingsManagerBase, AppSettingsManager>()
-        .AddSingleton<AppSettingsManager>()
-        .AddSingleton<CancellationTokenSource>(_ => (new CancellationTokenSource()))
-        .AddTransient<CancellationTokenBase, WorkerCancellationToken>()
-        .RegisterDBContexts(host.Configuration.GetConnectionString("TransactionsHubDB"))
-        .AddScoped<IPaymentGateway, USAePayPaymentGatewayAdapter>()
-        .AddScoped<USAePayService>()
-        .LoadInterfacesSingleton<IJob>()
-        .AddHttpClient()
-        .AddHostedService<Worker>();
+// Add Logging
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom
+    .Configuration(builder.Configuration)
+    .CreateLogger();
 
+builder.Services.AddSerilog(Log.Logger);
 
-    })
-    .UseSystemd()
-    .ConfigureAppConfiguration(configBuilder=>
-    {
-        var env =  Environment.GetEnvironmentVariables()["DOTNET_ENVIRONMENT"];
-        configBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env}.json", true, true)
-            .AddUserSecrets<Program>();
-    })
-    .Build();
- 
+Log.Information("Logger has been configured");
 
-host.Run();
+// Add CancellationToken
+builder.Services.AddSingleton<CancellationTokenSource>(_ => (new CancellationTokenSource()));
+builder.Services.AddTransient<CancellationTokenBase, WorkerCancellationToken>();
+
+// Add DBContexts
+builder.Services.RegisterDbContexts(builder.Configuration.GetConnectionString("TransactionsHubDB"));
+
+// Add PaymentGateways
+builder.Services.AddScoped<IPaymentGateway, USAePayPaymentGatewayAdapter>();
+builder.Services.AddScoped<USAePayService>();
+
+// Add HttpClient
+builder.Services.AddHttpClient();
+
+// Add JobsService
+builder.Services.LoadInterfacesSingleton<IJob>();
+builder.Services.AddHostedService<Worker>();
+
+// Systemd
+builder.Services.AddSystemd();
+
+var app = builder.Build();
+
+app.Run();
