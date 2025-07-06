@@ -2,6 +2,7 @@
 using _011Global.RestServiceAPI.Mappers;
 using _011Global.Shared.CustomerDbContext.Entities;
 using _011Global.Shared.CustomerDbContext.Interfaces;
+using _011Global.Shared.Filters;
 using _011Global.Shared.Patterns;
 using _011Global.Shared.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ public class CustomersController : Controller
     }
 
     [HttpPost("EnrollCustomer")]
+    [AuthorizationFilter]
     public async Task<IActionResult> EnrollCustomer(CustomerDto customerDto)
     {
         try
@@ -46,6 +48,7 @@ public class CustomersController : Controller
     }
     
     [HttpPost("UnsubscribeCustomer")]
+    [AuthorizationFilter]
     public async Task<IActionResult> UnsubscribeCustomer(int customerId)
     {
         try

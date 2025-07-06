@@ -4,10 +4,11 @@ namespace _011Global.RestServiceAPI.DTOs;
 
 public class AddressDto
 {
+    [Range(0, 99)]
     [Required]
     public short CountryISO2 { get; set; }
     
-    [MaxLength(150)]
+    [MaxLength(2)]
     [Required]
     public string StateISO2 { get; set; } = null!;
     

@@ -26,4 +26,6 @@ public class AppSettingsManagerBase(IConfiguration configuration)
     public string USAePayApiPin => GetAppSettingValue<string>("USAePay:Authentication:ApiPin");
     
     public string USAePayApiKey => GetAppSettingValue<string>("USAePay:Authentication:ApiKey");
+    
+    public string AccessTokenSecretKey => GetAppSettingValue<string>("JwtSettings:AccessToken:SecretKey");
 }

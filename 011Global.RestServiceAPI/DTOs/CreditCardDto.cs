@@ -8,7 +8,7 @@ public class CreditCardDto
     [Required]
     public string CreditCardNumber { get; set; } = null!;
     
-    [MaxLength(4)]
+    [RegularExpression(@"^[0-9]{4}$", ErrorMessage = "Invalid LastFourNumbers")]
     [Required]
     public string LastFourNumbers { get; set; } = null!;
     
