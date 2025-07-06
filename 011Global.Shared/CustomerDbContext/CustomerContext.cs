@@ -9,5 +9,4 @@ public class CustomerContext(DbContextOptions<CustomerContext> options) : DbCont
     public DbSet<Address> Addresses { get; set; }
     public DbSet<CreditCard> CreditCards { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
-    //public DbSet<TransactionStatus> TransactionStatuses { get; set; }
 }

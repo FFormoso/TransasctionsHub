@@ -29,7 +29,7 @@ public class JobsServiceRepository : IJobsServiceRepository
                 try
                 {
                     var existingJob = await _context.GlobalJobs.SingleOrDefaultAsync(g => g.TypeName == typeName) ?? 
-                                      throw new NullReferenceException($"There is no job with the name {typeName}");
+                                      throw new InvalidOperationException($"There is no job with the name {typeName}");
                     
                     existingJob.IsRunning = isRunning;
                     existingJob.LastStartDate = lastStartDate;
@@ -53,7 +53,7 @@ public class JobsServiceRepository : IJobsServiceRepository
                 try
                 {
                     var existingJob = await _context.GlobalJobs.SingleOrDefaultAsync(g => g.TypeName == typeName) ?? 
-                                      throw new NullReferenceException($"There is no job with the name {typeName}");
+                                      throw new InvalidOperationException($"There is no job with the name {typeName}");
 
                     existingJob.IsRunning = isRunning;
                     existingJob.LastStopDate = lastStopDate;

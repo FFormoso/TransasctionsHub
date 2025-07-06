@@ -28,8 +28,8 @@ public class Address
     
     //Navigation properties
     [InverseProperty(nameof(Customer.ShippingAddress))]
-    public ICollection<Customer> ShippingCustomers { get; set; } = null!;
+    public ICollection<Customer>? ShippingCustomers { get; set; }
 
     [InverseProperty(nameof(Customer.BillingAddress))]
-    public ICollection<Customer> BillingCustomers { get; set; } = null!;
+    public ICollection<Customer>? BillingCustomers { get; set; }
 }

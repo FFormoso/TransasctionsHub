@@ -9,6 +9,8 @@ public class Customer
     [Key]
     public int CustomerID { get; set; }
     
+    public bool IsActive { get; set; }
+    
     [MaxLength(256)]
     public string CustomerEmail { get; set; } = null!;
     
@@ -36,5 +38,5 @@ public class Customer
     
     public ICollection<CreditCard> CreditCards { get; set; } = null!;
     
-    public ICollection<Transaction> Transactions { get; set; } = null!;
+    public ICollection<Transaction>? Transactions { get; set; }
 }

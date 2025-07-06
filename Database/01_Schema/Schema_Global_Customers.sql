@@ -13,6 +13,7 @@ create table dbo.Global_Customers
             references dbo.Global_Addresses,
     MonthlyFee        money                                           not null,
     CreationDate      datetime
-        constraint DF_Global_Customers_CreationDate default getdate() not null
+        constraint DF_Global_Customers_CreationDate default getdate() not null,
+    IsActive          bit default 1                                   not null
 )
 go

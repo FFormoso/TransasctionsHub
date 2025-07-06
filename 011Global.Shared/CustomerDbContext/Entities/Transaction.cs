@@ -17,7 +17,7 @@ public class Transaction
     public TransactionStatus TransactionStatusID { get; set; }
     
     [MaxLength(50)]
-    public string? PaymentGWTransID { get; set; }
+    public string PaymentGWTransID { get; set; } = null!;
     
     [MaxLength(10)]
     public string? ResponseCode { get; set; }
@@ -34,7 +34,7 @@ public class Transaction
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime CreationDate { get; set; }
     
-    public int? CreditCardID { get; set; }
+    public int CreditCardID { get; set; }
     
     //Navigation properties
     [ForeignKey("CustomerID")]

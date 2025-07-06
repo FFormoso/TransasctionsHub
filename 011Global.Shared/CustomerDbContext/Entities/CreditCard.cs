@@ -26,7 +26,7 @@ public class CreditCard
     [MaxLength(8)]
     public string ExpirationYear { get; set; } = null!;
     
-    public DateTime? CreationDate { get; set; }
+    public DateTime CreationDate { get; set; }
     
     public bool Tokenized { get; set; }
     
@@ -34,5 +34,5 @@ public class CreditCard
     [ForeignKey("CustomerID")]
     public Customer Customer { get; set; } = null!;
     
-    public ICollection<Transaction> Transactions { get; set; } = null!;
+    public ICollection<Transaction>? Transactions { get; set; }
 }

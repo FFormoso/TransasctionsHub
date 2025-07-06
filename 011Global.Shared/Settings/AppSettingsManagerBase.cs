@@ -14,7 +14,7 @@ public class AppSettingsManagerBase(IConfiguration configuration)
     protected T GetAppSettingValue<T>(string setting)
     {
         return configuration.GetSection(setting).Get<T>() ?? 
-               throw new NullReferenceException($"the property {setting} is not defined in the configuration");
+               throw new InvalidOperationException($"the property {setting} is not defined in the configuration");
     }
     
     public string USAePayBaseUrl => GetAppSettingValue<string>("USAePay:Routes:BaseUrl");

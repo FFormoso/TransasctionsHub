@@ -19,7 +19,7 @@ public class CustomerRepository(CustomerContext context) : ICustomerRepository
     {
         return context.Customers
             .Where(c => c.Transactions
-                .Any(t => t.CreationDate < DateTime.Now.AddDays(-30)))
+                .Any(t => t.CreationDate < DateTime.Now.AddDays(-30)) || c.Transactions.Count == 0)
             .Include(c => c.CreditCards)
             .Include(c => c.BillingAddress)
             .Include(c => c.ShippingAddress);
