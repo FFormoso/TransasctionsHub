@@ -18,7 +18,7 @@ public class SaleResponse
     
     public CreditCard CreditCard { get; set; }
     
-    public SavedCard Savedcard { get; set; }
+    public SavedCard? Savedcard { get; set; }
     
     public string Invoice { get; set; } = null!;
     

@@ -38,5 +38,5 @@ public class Customer
     
     public ICollection<CreditCard> CreditCards { get; set; } = null!;
     
-    public ICollection<Transaction>? Transactions { get; set; }
+    public ICollection<Transaction> Transactions { get; set; } = null!;
 }

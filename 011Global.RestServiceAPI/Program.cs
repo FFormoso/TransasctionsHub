@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
-using _011Global.RestServiceAPI.Settings;
 using _011Global.Shared;
+using Azure.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +12,12 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
+
+if (!builder.Environment.IsDevelopment())
+{
+    var keyVaultUrl = new Uri(builder.Configuration.GetValue<string>("KeyVaultUrl"));
+    builder.Configuration.AddAzureKeyVault(keyVaultUrl, new ManagedIdentityCredential());
+}
 
 // Add Logging
 Log.Logger = new LoggerConfiguration()

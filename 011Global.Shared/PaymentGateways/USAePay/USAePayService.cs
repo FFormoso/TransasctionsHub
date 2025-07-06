@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 using _011Global.Shared.Settings;
 using _011Global.Shared.PaymentGateways.USAePay.Requests;
 using _011Global.Shared.PaymentGateways.USAePay.Responses;
-using _011Global.Shared.USAePay.Utils;
+using _011Global.Shared.PaymentGateways.USAePay.Utils;
 
 namespace _011Global.Shared.PaymentGateways.USAePay;
 

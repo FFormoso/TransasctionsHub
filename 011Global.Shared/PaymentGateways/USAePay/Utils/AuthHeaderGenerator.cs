@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace _011Global.Shared.USAePay.Utils;
+namespace _011Global.Shared.PaymentGateways.USAePay.Utils;
 
 public static class AuthHeaderGenerator
 {
@@ -15,7 +15,7 @@ public static class AuthHeaderGenerator
         return authKey;
     }
     
-    static string ComputeSha256Hash(string rawData)
+    private static string ComputeSha256Hash(string rawData)
     {
         using (var sha256 = SHA256.Create())
         {

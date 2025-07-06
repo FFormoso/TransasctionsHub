@@ -5,6 +5,7 @@ using _011Global.Shared;
 using _011Global.Shared.PaymentGateways.Interfaces;
 using _011Global.Shared.PaymentGateways.USAePay;
 using _011Global.Shared.Settings;
+using Azure.Identity;
 using Serilog;
 
 var builder = new HostApplicationBuilder(args);
@@ -18,6 +19,12 @@ builder.Configuration
     .AddJsonFile($"PGWsSettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
+
+if (!builder.Environment.IsDevelopment())
+{
+    var keyVaultUrl = new Uri(builder.Configuration.GetValue<string>("KeyVaultUrl"));
+    builder.Configuration.AddAzureKeyVault(keyVaultUrl, new ManagedIdentityCredential());
+}
 
 // Add AppSettingsManager
 builder.Services.AddSingleton<AppSettingsManagerBase, AppSettingsManager>();
