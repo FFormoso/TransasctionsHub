@@ -8,18 +8,19 @@ public class CreditCardDto
     [Required]
     public string CreditCardNumber { get; set; } = null!;
     
-    [MaxLength(8)]
+    [MaxLength(4)]
     [Required]
     public string LastFourNumbers { get; set; } = null!;
     
     [MaxLength(350)]
     public string CardHolder { get; set; } = null!;
     
-    [MaxLength(5)]
+    [Range(1, 12)]
+    [RegularExpression(@"^[0-9]{2}$", ErrorMessage = "Invalid ExpirationMonth format")]
     [Required]
     public string ExpirationMonth { get; set; } = null!;
     
-    [MaxLength(8)]
+    [RegularExpression(@"^[0-9]{4}$", ErrorMessage = "Invalid ExpirationYear format")]
     [Required]
     public string ExpirationYear { get; set; } = null!;
 }

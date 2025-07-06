@@ -15,13 +15,14 @@ public static class CustomerMapper
         
         customer.ShippingAddress = ObjectsMapper.Map<AddressDto, Address>(customerDto.ShippingAddress);
         customer.ShippingAddress.CreationDate = DateTime.Now;
-        
-        customer.CreditCards = customerDto.CreditCards.Select(ObjectsMapper.Map<CreditCardDto, CreditCard>).ToList();
-        customer.CreditCards?.ToList().ForEach(c =>
+
+        customer.CreditCards = customerDto.CreditCards.Select(c =>
         {
-            c.CreationDate = DateTime.Now;
-            c.Tokenized = false;
-        });
+            var creditCard = ObjectsMapper.Map<CreditCardDto, CreditCard>(c);
+            creditCard.CreationDate = DateTime.Now;
+            creditCard.Tokenized = false;
+            return creditCard;
+        }).ToList();
         
         customer.CreationDate = DateTime.Now;
         customer.IsActive = true;

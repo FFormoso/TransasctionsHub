@@ -1,7 +1,6 @@
 ﻿using _011Global.JobsService.JobInterfaces;
 using _011Global.JobsService.Settings;
 using _011Global.Shared;
-using _011Global.Shared.CustomerDbContext.Entities;
 using _011Global.Shared.CustomerDbContext.Enums;
 using _011Global.Shared.CustomerDbContext.Interfaces;
 using _011Global.Shared.PaymentGateways.Builders;
@@ -65,16 +64,7 @@ public class RecurringChargeJob : Job, IJob
                         creditCard.Tokenized = true;
                     }
 
-                    await customerRepo.SaveTransaction(new Transaction()
-                    {
-                        Amount = paymentRes.Amount,
-                        CreditCard = creditCard,
-                        CustomerID = customer.CustomerID,
-                        ResponseCode = paymentRes.ResponseCode,
-                        PaymentGWTransID = paymentRes.TransactionId,
-                        TransactionStatusID = paymentRes.TransactionStatus,
-                        SubErrorDesc1 = paymentRes.ErrorMessage
-                    });
+                    await customerRepo.SaveTransaction(paymentRes, creditCard, customer.CustomerID);
 
                     if (paymentRes.TransactionStatus != TransactionStatus.Approved)
                     {

@@ -1,5 +1,6 @@
 ﻿using _011Global.Shared.CustomerDbContext.Entities;
 using _011Global.Shared.CustomerDbContext.Interfaces;
+using _011Global.Shared.PaymentGateways.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -28,6 +29,37 @@ public class CustomerRepository(CustomerContext context) : ICustomerRepository
             .Include(c => c.ShippingAddress);
     }
     
+    public async Task<Transaction> SaveTransaction(PaymentResponse paymentResponse, CreditCard creditCard, int customerId)
+    {
+        var transaction = new Transaction()
+        {
+            Amount = paymentResponse.Amount,
+            CreditCard = creditCard,
+            CustomerID = customerId,
+            ResponseCode = paymentResponse.ResponseCode,
+            PaymentGWTransID = paymentResponse.TransactionId,
+            TransactionStatusID = paymentResponse.TransactionStatus,
+            SubErrorDesc1 = paymentResponse.ErrorMessage
+        };
+            
+        return await SaveTransaction(transaction);
+    }
+    
+    public async Task<Transaction> SaveTransaction(PaymentResponse paymentResponse, int customerId)
+    {
+        var transaction = new Transaction()
+        {
+            Amount = paymentResponse.Amount,
+            CustomerID = customerId,
+            ResponseCode = paymentResponse.ResponseCode,
+            PaymentGWTransID = paymentResponse.TransactionId,
+            TransactionStatusID = paymentResponse.TransactionStatus,
+            SubErrorDesc1 = paymentResponse.ErrorMessage
+        };
+            
+        return await SaveTransaction(transaction);
+    }
+
     public async Task<Transaction> SaveTransaction(Transaction transaction)
     {
         await context.AddAsync(transaction);
