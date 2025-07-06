@@ -34,3 +34,31 @@ services:
       cd /scripts/Dataset/;
       /opt/mssql-tools/bin/sqlcmd -S transactionshub3-mssql -U SA -P '${DB_PASS}' -d 'TransactionsHub3' -i 'Dataset.sql';"
     profiles: ["TransactionsHub"]
+  
+  transactionshub3-jobsservice:
+    build:
+      context: ../../
+      dockerfile: JobsService/Dockerfile
+    container_name: transactionshub3-jobsservice
+    hostname: JobsServiceContainer
+    depends_on:
+      - aux-db-init
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - ConnectionStrings__TransactionsHubDB=Server=transactionshub3-mssql,1433; Database=TransactionsHub3; User Id=sa; Password=${DB_PASS}; TrustServerCertificate=True;
+    profiles: ["TransactionsHub"]
+  
+  transactionshub3-restserviceapi:
+    build:
+      context: ../../
+      dockerfile: 011Global.RestServiceAPI/Dockerfile
+    container_name: transactionshub3-restserviceapi
+    ports:
+      - "5142:5142"
+    depends_on:
+      - aux-db-init
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5142
+      - ConnectionStrings__TransactionsHubDB=Server=transactionshub3-mssql,1433; Database=TransactionsHub3; User Id=sa; Password=${DB_PASS}; TrustServerCertificate=True;
+    profiles: ["TransactionsHub"]

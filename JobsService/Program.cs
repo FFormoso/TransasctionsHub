@@ -14,7 +14,10 @@ builder.Configuration
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-    .AddUserSecrets<Program>();
+    .AddJsonFile("PGWsSettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"PGWsSettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddUserSecrets<Program>()
+    .AddEnvironmentVariables();
 
 // Add AppSettingsManager
 builder.Services.AddSingleton<AppSettingsManagerBase, AppSettingsManager>();

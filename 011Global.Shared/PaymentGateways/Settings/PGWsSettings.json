@@ -1,0 +1,13 @@
+﻿{
+  "USAePay": {
+    "Routes": {
+      "BaseUrl": "production-usaepay-url",
+      "Transactions": "/transactions"
+    },
+    "Authentication": {
+      "ApiSeed": "<from-key-vault>",
+      "ApiKey": "<from-key-vault>",
+      "ApiPin": "<from-key-vault>"
+    }
+  }
+}

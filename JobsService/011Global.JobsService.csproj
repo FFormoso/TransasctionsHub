@@ -7,6 +7,7 @@
     <UserSecretsId>dotnet-JobsService-03b40644-d574-43d8-85f0-38b1942461ec</UserSecretsId>
     <RootNamespace>_011Global.JobsService</RootNamespace>
     <AssemblyName>011Global.JobsService</AssemblyName>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,9 +25,23 @@
     <None Update="011Global.JobsService.service">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Remove="..\011Global.Shared\PaymentGateways\Settings\PGWsSettings.json" />
+    <Content Include="..\011Global.Shared\PaymentGateways\Settings\PGWsSettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="..\011Global.Shared\PaymentGateways\Settings\PGWsSettings.Development.json" />
+    <Content Include="..\011Global.Shared\PaymentGateways\Settings\PGWsSettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\011Global.Shared\011Global.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
 </Project>

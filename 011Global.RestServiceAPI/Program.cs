@@ -13,9 +13,6 @@ builder.Configuration
     .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
 
-// Add AppSettingsManager
-builder.Services.AddSingleton<AppSettingsManager>();
-
 // Add Logging
 Log.Logger = new LoggerConfiguration()
     .ReadFrom
