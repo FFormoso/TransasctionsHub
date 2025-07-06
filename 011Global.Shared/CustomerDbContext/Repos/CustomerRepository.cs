@@ -31,4 +31,22 @@ public class CustomerRepository(CustomerContext context) : ICustomerRepository
         await context.SaveChangesAsync();
         return transaction;
     }
+
+    public async Task Insert(Customer customer)
+    {
+        await context.AddAsync(customer);
+        await context.SaveChangesAsync();
+    }
+    
+    public async Task<int> Unsubscribe(int customerId)
+    {
+        var rows = await context.Customers
+            .Where(c => c.CustomerID == customerId && c.IsActive)
+            .ExecuteUpdateAsync(b =>
+                b.SetProperty(c => c.IsActive, false));
+        
+        await context.SaveChangesAsync();
+
+        return rows;
+    }
 }
