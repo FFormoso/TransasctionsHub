@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "ee1bcee4-dede-4223-95d6-2823bdee0763",
+		"name": "TransactionsHub3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22992895"
+	},
+	"item": [
+		{
+			"name": "EnrollCustomer",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"customerEmail\": \"JhonDoe@example.com\",\r\n        \"customerFirstName\": \"Jhon\",\r\n        \"customerLastName\": \"Doe\",\r\n        \"monthlyFee\": 99.9900,\r\n        \"shippingAddress\": {\r\n            \"countryISO2\": 1,\r\n            \"stateISO2\": \"CA\",\r\n            \"city\": \"City1\",\r\n            \"zipCode\": \"1001\",\r\n            \"addressText\": \"1234 Street1\"\r\n        },\r\n        \"billingAddress\": {\r\n            \"countryISO2\": 1,\r\n            \"stateISO2\": \"CA\",\r\n            \"city\": \"City1\",\r\n            \"zipCode\": \"1001\",\r\n            \"addressText\": \"1234 Street1\"\r\n        },\r\n        \"creditCards\": [\r\n            {\r\n                \"creditCardNumber\": \"4000101411112228\",\r\n                \"lastFourNumbers\": \"2225\",\r\n                \"cardHolder\": \"Jhon Doe\",\r\n                \"expirationMonth\": \"06\",\r\n                \"expirationYear\": \"2030\"\r\n            }\r\n        ]\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5142/Customers/EnrollCustomer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5142",
+					"path": [
+						"Customers",
+						"EnrollCustomer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UnsubscribeCustomer",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5142/Customers/UnsubscribeCustomer?customerId=16505",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5142",
+					"path": [
+						"Customers",
+						"UnsubscribeCustomer"
+					],
+					"query": [
+						{
+							"key": "customerId",
+							"value": "16505"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DebugConfig",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base}}/DebugConfig",
+					"host": [
+						"{{base}}"
+					],
+					"path": [
+						"DebugConfig"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base",
+			"value": "http://localhost:5142",
+			"type": "string"
+		}
+	]
+}

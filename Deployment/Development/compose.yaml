@@ -11,7 +11,7 @@ services:
       test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "SA", "-P", "${DB_PASS}", "-Q", "SELECT 1"]
       interval: 5s
       retries: 10
-    profiles: ["TransactionsHub"]
+    profiles: ["TransactionsHub", "TransactionsHubDatabase"]
 
   aux-db-init:
     image: mcr.microsoft.com/mssql/server:2017-latest
@@ -33,7 +33,7 @@ services:
       
       cd /scripts/Dataset/;
       /opt/mssql-tools/bin/sqlcmd -S transactionshub3-mssql -U SA -P '${DB_PASS}' -d 'TransactionsHub3' -i 'Dataset.sql';"
-    profiles: ["TransactionsHub"]
+    profiles: ["TransactionsHub", "TransactionsHubDatabase"]
   
   transactionshub3-jobsservice:
     build:
@@ -46,6 +46,9 @@ services:
     environment:
       - DOTNET_ENVIRONMENT=Development
       - ConnectionStrings__TransactionsHubDB=Server=transactionshub3-mssql,1433; Database=TransactionsHub3; User Id=sa; Password=${DB_PASS}; TrustServerCertificate=True;
+      - USAePay__Authentication__ApiSeed=${USAEPAY_API_SEED}
+      - USAePay__Authentication__ApiKey=${USAEPAY_API_KEY}
+      - USAePay__Authentication__ApiPin=${USAEPAY_API_PIN}
     profiles: ["TransactionsHub"]
   
   transactionshub3-restserviceapi:
@@ -61,4 +64,5 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5142
       - ConnectionStrings__TransactionsHubDB=Server=transactionshub3-mssql,1433; Database=TransactionsHub3; User Id=sa; Password=${DB_PASS}; TrustServerCertificate=True;
+      - JwtSettings__AccessToken__SecretKey=${ACCESS_TOKEN_SECRET_KEY}
     profiles: ["TransactionsHub"]

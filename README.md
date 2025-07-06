@@ -1,8 +1,139 @@
-# Changelog
+# Transactions Hub 3
+Technical test for 011Global
+
+## Installation
+### Cloning the repository
+Clone the repository to a local directory or download the source code as ZIP
+```bash
+git clone https://github.com/FFormoso/TransasctionsHub.git
+```
+
+### Setting the configuration
+Rename the file `.env.example` on `/Deployment/Development/` to `.env`
+```bash
+mv ./Deployment/Development/.env.example ./Deployment/Development/.env
+```
+And set an appropriate value for each environment variable inside it
+
+If you are going to deploy it from the IDE, have to set the `Users Secrets` for both projects. On JetBrains Rider, `Right click on a project > Tools > .NET User Secrets`
+
+#### Example user secrets
+
+JobService
+```json
+{
+  "ConnectionStrings": {
+    "TransactionsHubDB": "Server=localhost,1433; Database=TransactionsHub3; User Id=sa; Password=Securitymssqlpas5!; TrustServerCertificate=True;"
+  },
+  "USAePay": {
+    "Authentication": {
+      "ApiSeed": "youapiseed",
+      "ApiKey": "youapikey",
+      "ApiPin": "youapipin"
+    }
+  }
+}
+```
+
+RestServiceAPI
+```json
+{
+  "ConnectionStrings": {
+    "TransactionsHubDB": "Server=localhost,1433; Database=TransactionsHub3; User Id=sa; Password=Securitymssqlpas5!; TrustServerCertificate=True;"
+  },
+  "JwtSettings": {
+    "AccessToken": {
+      "SecretKey": "qweqweqweqweqweqweqweqweqweqweqweqwe"
+    }
+  }
+}
+```
+
+### Deploying
+Deploy with docker compose using deploy.sh script, docker-compose command or any tool that has docker integration as Visual Studio or JetBrains Rider IDEs
+```bash
+cd ./Deployment/Development/
+
+deploy.sh TransactionsHub
+```
+
+Or you can deploy just the database and run the applications from the IDE (remember to set the user secrets before)
+```bash
+cd ./Deployment/Development/
+
+deploy.sh TransactionsHubDatabase
+```
+
+## Usage
+
+### JobsService
+Automated background worker with a job for process payments to all active customers in due.
+
+### RestServiceAPI
+You will find a postman collection json file named `TransactionsHub3.postman_collection.json` with the examples for consuming the API endpoints.
+
+> [!NOTE]
+> The endpoints require an `Authorization` header with a valid JWT token. With the default secret key, you can use the following:
+> 
+> eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E
+> 
+> The postman collection already has it
+
+#### EnrollCustomer
+Endpoint for adding new customers.
+```bash
+curl --location 'http://localhost:5142/Customers/EnrollCustomer' \
+--header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+        "customerEmail": "JhonDoe@example.com",
+        "customerFirstName": "Jhon",
+        "customerLastName": "Doe",
+        "monthlyFee": 99.9900,
+        "shippingAddress": {
+            "countryISO2": 1,
+            "stateISO2": "CA",
+            "city": "City1",
+            "zipCode": "1001",
+            "addressText": "1234 Street1"
+        },
+        "billingAddress": {
+            "countryISO2": 1,
+            "stateISO2": "CA",
+            "city": "City1",
+            "zipCode": "1001",
+            "addressText": "1234 Street1"
+        },
+        "creditCards": [
+            {
+                "creditCardNumber": "4000101411112228",
+                "lastFourNumbers": "2225",
+                "cardHolder": "Jhon Doe",
+                "expirationMonth": "06",
+                "expirationYear": "2030"
+            }
+        ]
+    }'
+```
+
+#### UnsubscribeCustomer
+Endpoint for unsubscribing customers
+```bash
+curl --location --request POST 'http://localhost:5142/Customers/UnsubscribeCustomer?customerId=16505' \
+--header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E'
+```
+
+#### DebugConfig (Only available in development environment)
+Endpoint for getting all the configuration parameters
+```bash
+curl --location 'http://localhost:5142/DebugConfig'
+```
+
+## Changelog
 
 - Database project/directory with
-  - 01_Schema: Database structure inherit to the application
-  - 02_Data: Required data inherit to the application
+  - 01_Schema: Database structure inherent to the application
+  - 02_Data: Required data inherent to the application
   - 03_Migrations: Changes from the previous version to the current one
   - 05_Dataset: Testing dataset
 - Configuration management with **multiple configuration providers** accessed through `AppSettingsManager` class (alternatively, this can be done with *Options* pattern)
@@ -25,6 +156,9 @@
 - Simple **docker deployment** with **docker compose orchestration** for the `testing database`, `JobsService` and `RestServiceAPI`
 - Authentication with jwt token through `AuthorizationFilter`
 
-## Not implemented yet
+### Not implemented yet
 - **Concurrency control** for when multiple threads access to the same database row at the same time
 - Extracted `MonthlyFee` from `Customers` table to a new `SubscriptionPlans` table for better management of different plans
+
+## Project Status
+There are still some things I want to continue implementing, but I think it's enough as it is.
