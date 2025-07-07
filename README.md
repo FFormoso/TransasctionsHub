@@ -3,23 +3,24 @@ Technical test for 011Global
 
 ## Installation
 ### Cloning the repository
-Clone the repository to a local directory or download the source code as ZIP
+Clone the repository to your local machine or download the source code as a ZIP file.
 ```bash
 git clone https://github.com/FFormoso/TransasctionsHub.git
 ```
 
 ### Setting the configuration
-Rename the file `.env.example` on `/Deployment/Development/` to `.env`
+Rename the `.env.example` file located under `/Deployment/Development/` to `.env`.
 ```bash
 mv ./Deployment/Development/.env.example ./Deployment/Development/.env
 ```
-And set an appropriate value for each environment variable inside it
+Set appropriate values for each environment variable in the `.env` file as required.
 
-If you are going to deploy it from the IDE, have to set the `Users Secrets` for both projects. On JetBrains Rider, `Right click on a project > Tools > .NET User Secrets`
+If you plan to deploy directly from the IDE, you must configure `User Secrets` for both projects.  
+In JetBrains Rider: **Right-click on a project → Tools → .NET User Secrets.**
 
 #### Example user secrets
 
-JobService
+**JobService**
 ```json
 {
   "ConnectionStrings": {
@@ -35,7 +36,7 @@ JobService
 }
 ```
 
-RestServiceAPI
+**RestServiceAPI**
 ```json
 {
   "ConnectionStrings": {
@@ -49,45 +50,47 @@ RestServiceAPI
 }
 ```
 
-### Deploying
-Deploy with docker compose using deploy.sh script, docker-compose command or any tool that has docker integration as Visual Studio or JetBrains Rider IDEs
+### Deployment
+#### Deploy with Docker Compose
+Navigate to the `/Deployment/Development/` directory and deploy using `deploy.sh` or the `docker-compose` command. Alternatively, you can use any IDE that supports Docker, such as Visual Studio or JetBrains Rider.
 ```bash
 cd ./Deployment/Development/
-
-deploy.sh TransactionsHub
 ```
 
-Or you can deploy just the database and run the applications from the IDE (remember to set the user secrets before)
+To deploy all components:
 ```bash
-cd ./Deployment/Development/
-
-deploy.sh TransactionsHubDatabase
+./deploy.sh TransactionsHub
+```
+To deploy only the database and run the applications manually (ensure user secrets are configured beforehand):
+```bash
+./deploy.sh TransactionsHubDatabase
 ```
 
 ## Usage
 
 ### JobsService
-Automated background worker with a job for process payments to all active customers in due.
+A background worker service designed to process payments for all active customers in due.
 
 ### RestServiceAPI
-You will find a postman collection json file named `TransactionsHub3.postman_collection.json` with the examples for consuming the API endpoints.
+You will find a Postman Collection JSON file (`TransactionsHub3.postman_collection.json`) included with API endpoint examples for your convenience.
 
 > [!NOTE]
-> The endpoints require an `Authorization` header with a valid JWT token. With the default secret key, you can use the following:
+> The API endpoints require an `Authorization` header with a valid JWT token. With the default secret key, you can use the following:
 > 
-> eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E
+> `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E`
 > 
-> The postman collection already has it
+> The Postman Collection already includes this token in its headers.
 
-#### EnrollCustomer
-Endpoint for adding new customers.
+#### Example Endpoints
+
+**EnrollCustomer**: Add a new customer.
 ```bash
 curl --location 'http://localhost:5142/Customers/EnrollCustomer' \
 --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-        "customerEmail": "JhonDoe@example.com",
-        "customerFirstName": "Jhon",
+        "customerEmail": "JohnDoe@example.com",
+        "customerFirstName": "John",
         "customerLastName": "Doe",
         "monthlyFee": 99.9900,
         "shippingAddress": {
@@ -108,7 +111,7 @@ curl --location 'http://localhost:5142/Customers/EnrollCustomer' \
             {
                 "creditCardNumber": "4000101411112228",
                 "lastFourNumbers": "2225",
-                "cardHolder": "Jhon Doe",
+                "cardHolder": "John Doe",
                 "expirationMonth": "06",
                 "expirationYear": "2030"
             }
@@ -116,18 +119,52 @@ curl --location 'http://localhost:5142/Customers/EnrollCustomer' \
     }'
 ```
 
-#### UnsubscribeCustomer
-Endpoint for unsubscribing customers
+**UnsubscribeCustomer**: Unsubscribe an existing customer.
 ```bash
-curl --location --request POST 'http://localhost:5142/Customers/UnsubscribeCustomer?customerId=16505' \
+curl --location --request PATCH 'http://localhost:5142/Customers/UnsubscribeCustomer?customerId=16505' \
 --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E'
 ```
 
-#### DebugConfig (Only available in development environment)
-Endpoint for getting all the configuration parameters
+**DebugConfig** (Development Only): Retrieve all environment configuration parameters.
 ```bash
 curl --location 'http://localhost:5142/DebugConfig'
 ```
+
+## Running Tests
+
+To run the tests, you need to configure the `User Secrets` for the test project.
+
+Example:
+```json
+{
+  "ConnectionStrings": {
+    "TransactionsHubDB": "Server=localhost,1433; Database=TransactionsHub3; User Id=sa; Password=Securitymssqlpas5!; TrustServerCertificate=True;"
+  },
+  "RestServiceAPI": {
+    "TestingAuthorizationToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImV4cCI6MTg1MTgxNDk0OH0.Pwc3WvTbVTq5R7Up2DuSr0k0L2dSXzi4tT0Jl_1UA7E"
+  }
+}
+```
+
+Be sure that the configuration file `appsettings.test.json` contains the correct parameters:
+```json
+{
+    "ConnectionStrings": {
+        "TransactionsHubDB": "<from-user-secrets>"
+    },
+    "RestServiceAPI": {
+        "BaseUrl": "http://localhost:5142/",
+        "TestingAuthorizationToken": "<from-user-secrets>",
+        "Endpoints": {
+            "EnrollCustomer": "Customers/EnrollCustomer",
+            "UnsubscribeCustomer": "Customers/UnsubscribeCustomer"
+        }
+    }
+}
+```
+
+> [!IMPORTANT]
+> Make sure to run the tests with a fresh dataset, and keep in mind that the test project does **NOT** reset the dataset on every run
 
 ## Changelog
 
@@ -153,12 +190,15 @@ curl --location 'http://localhost:5142/DebugConfig'
 - Implemented RestServiceAPI with a `CustomerController` with two endpoints
   - EnrollCustomer: for adding new customers, using `CustomerDTO` validated through `DataAnnotations` 
   - UnsubscribeCustomer: for an existing active customer, changes customers `IsActive` to `false`
-- Simple **docker deployment** with **docker compose orchestration** for the `testing database`, `JobsService` and `RestServiceAPI`
+  - DebugConfig: Endpoint for getting all the configuration parameters. Only available in development environment
 - Authentication with jwt token through `AuthorizationFilter`
+- Simple **docker deployment** with **docker compose orchestration** for the `testing database`, `JobsService` and `RestServiceAPI`
+- Testing project with `Reqnroll`
 
 ### Not implemented yet
 - **Concurrency control** for when multiple threads access to the same database row at the same time
 - Extracted `MonthlyFee` from `Customers` table to a new `SubscriptionPlans` table for better management of different plans
+- Isolated test environment. Automated deployment of a fresh containerized environment per test run.
 
 ## Project Status
 There are still some things I want to continue implementing, but I think it's enough as it is.

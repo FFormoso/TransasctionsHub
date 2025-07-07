@@ -50,7 +50,7 @@
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "POST",
+				"method": "PATCH",
 				"header": [
 					{
 						"key": "Authorization",
