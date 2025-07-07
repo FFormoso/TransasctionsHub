@@ -47,7 +47,7 @@ public class CustomersController : Controller
         }
     }
     
-    [HttpPost("UnsubscribeCustomer")]
+    [HttpPatch("UnsubscribeCustomer")]
     [AuthorizationFilter]
     public async Task<IActionResult> UnsubscribeCustomer(int customerId)
     {

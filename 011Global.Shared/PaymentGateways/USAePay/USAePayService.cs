@@ -17,13 +17,14 @@ public class USAePayService
 
     private readonly AppSettingsManagerBase _appSettings;
 
-    private readonly string _baseUrl;
-
     public USAePayService(HttpClient httpClient, AppSettingsManagerBase appSettings)
     {
         _httpClient = httpClient;
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", 
-                AuthHeaderGenerator.Generate(appSettings.USAePayApiSeed, appSettings.USAePayApiKey, appSettings.USAePayApiPin));
+        
+        _httpClient.BaseAddress = new Uri(appSettings.USAePayBaseUrl);
+        
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", 
+            AuthHeaderGenerator.Generate(appSettings.USAePayApiSeed, appSettings.USAePayApiKey, appSettings.USAePayApiPin));
         
         _serOptions = new JsonSerializerOptions
         {
@@ -33,7 +34,6 @@ public class USAePayService
         };
         
         _appSettings = appSettings;
-        _baseUrl = _appSettings.USAePayBaseUrl;
     }
 
     
@@ -42,12 +42,12 @@ public class USAePayService
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync(_baseUrl + _appSettings.USAePayTranstransctionsEndpoint,
+            var response = await _httpClient.PostAsJsonAsync(_appSettings.USAePayTranstransctionsEndpoint,
                 request, _serOptions);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<SaleResponse>() ??
-                   throw new InvalidOperationException("Response content was empty or could not be deserialized.");;
+                   throw new InvalidOperationException("Response content was empty or could not be deserialized.");
         }
         catch (HttpRequestException ex)
         {

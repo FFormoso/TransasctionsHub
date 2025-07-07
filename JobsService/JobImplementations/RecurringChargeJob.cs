@@ -82,7 +82,7 @@ public class RecurringChargeJob : Job, IJob
             }
             catch (Exception ex)
             {
-                logger.LogCritical($"Error processing payment for customer {customer.CustomerID}", ex);
+                logger.LogCritical(ex, "Error processing payment for customer {customerId}", customer.CustomerID);
             }
         }
 

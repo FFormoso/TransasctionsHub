@@ -42,7 +42,8 @@ services:
     container_name: transactionshub3-jobsservice
     hostname: JobsServiceContainer
     depends_on:
-      - aux-db-init
+      transactionshub3-mssql:
+        condition: service_healthy
     environment:
       - DOTNET_ENVIRONMENT=Development
       - ConnectionStrings__TransactionsHubDB=Server=transactionshub3-mssql,1433; Database=TransactionsHub3; User Id=sa; Password=${DB_PASS}; TrustServerCertificate=True;
@@ -59,7 +60,8 @@ services:
     ports:
       - "5142:5142"
     depends_on:
-      - aux-db-init
+      transactionshub3-mssql:
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5142

@@ -1,8 +1,8 @@
 ﻿{
   "USAePay": {
     "Routes": {
-      "BaseUrl": "https://sandbox.usaepay.com/api/v2",
-      "Transactions": "/transactions"
+      "BaseUrl": "https://sandbox.usaepay.com/api/v2/",
+      "Transactions": "transactions"
     },
     "Authentication": {
       "ApiSeed": "<from-user-secrets>",

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransasctionsHubUnitTesting", "TransasctionsHubConsole\TransasctionsHubUnitTesting.csproj", "{23F5C370-BA34-4158-9C18-6477224C05C4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransasctionsHubUnitTesting", "TransasctionsHubUnitTesting\TransasctionsHubUnitTesting.csproj", "{23F5C370-BA34-4158-9C18-6477224C05C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "011Global.JobsService", "JobsService\011Global.JobsService.csproj", "{23AE1131-8564-40BD-936A-95B81892868C}"
 EndProject
